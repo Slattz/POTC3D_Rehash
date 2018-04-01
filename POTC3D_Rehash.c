@@ -26,16 +26,17 @@ u32 Fix_LEGOPOTC3D_Checksum(u8* data, u32 length)
     u32 checksum = 0xFFFFFFFF;
     if (length > 0)
     {
-        u32 i;
+        int i;
         u32 j;
-        u32 offset = 0;
+        int offset = -1;
         u8 byte = 0;
         u32 unk;
+
         for (i = length>>1; i > 0; i--)
         {
             for (j = 0; j < 2; j++)
             {
-                byte = (u8)(data[offset+j]);
+                byte = (u8)(data[offset+1+j]);
                 byte ^= checksum;
                 byte &= 0xFF;
                 unk = CRC_TABLE[ (byte<<2)/4 ];
@@ -43,10 +44,9 @@ u32 Fix_LEGOPOTC3D_Checksum(u8* data, u32 length)
             }
             offset += 2;
         }
-        return checksum;
     }
 
-    return 0;
+    return ~checksum;
 }
 
 int main(int argc, char* argv[])
